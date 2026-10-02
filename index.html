@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAGA — AI Assistant</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --red:#ff163d;
+  --red2:#ff405b;
+  --dark:#030303;
+  --panel:#0a0a0c;
+  --text:#f5f5f5;
+  --muted:#85858d;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  background:#020202;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  overflow:hidden;
+}
+
+.app{
+  width:100%;
+  max-width:720px;
+  height:100vh;
+  margin:auto;
+  position:relative;
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(255,0,40,.13),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #090909,
+      #020202
+    );
+}
+
+.app::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      rgba(255,255,255,.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.018) 1px,
+      transparent 1px
+    );
+
+  background-size:45px 45px;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+  height:74px;
+  position:relative;
+  z-index:20;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 18px;
+
+  border-bottom:1px solid rgba(255,255,255,.08);
+
+  background:rgba(5,5,5,.9);
+
+  backdrop-filter:blur(18px);
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.menu{
+  width:43px;
+  height:43px;
+
+  border:1px solid #28282d;
+  border-radius:14px;
+
+  background:#09090a;
+  color:white;
+
+  font-size:23px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+
+  border-radius:50%;
+
+  border:2px solid var(--red);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:white;
+
+  font-size:25px;
+  font-weight:bold;
+
+  background:
+    radial-gradient(
+      circle,
+      #ff405b,
+      #360008 62%,
+      #050505
+    );
+
+  box-shadow:
+    0 0 15px rgba(255,0,45,.45),
+    inset 0 0 14px rgba(255,30,60,.35);
+}
+
+.brand h1{
+  font-size:24px;
+  letter-spacing:8px;
+  line-height:25px;
+}
+
+.brand p{
+  color:#999;
+  font-size:9px;
+  letter-spacing:3px;
+  margin-top:3px;
+}
+
+.header-actions{
+  display:flex;
+  gap:8px;
+}
+
+.icon-btn{
+  width:43px;
+  height:43px;
+
+  border:1px solid #242429;
+  background:#09090a;
+
+  border-radius:14px;
+
+  color:#ddd;
+  font-size:19px;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+  height:39vh;
+  min-height:260px;
+  max-height:390px;
+
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.tagline{
+  position:absolute;
+
+  left:30px;
+  top:45px;
+
+  z-index:2;
+
+  font-size:15px;
+  line-height:1.8;
+
+  letter-spacing:5px;
+
+  color:#ddd;
+}
+
+.tagline strong{
+  color:var(--red);
+  font-weight:500;
+}
+
+.online-card{
+  position:absolute;
+
+  right:22px;
+  top:42px;
+
+  padding:13px 18px;
+
+  border:1px solid rgba(255,40,70,.28);
+  border-radius:17px;
+
+  background:rgba(20,5,7,.7);
+
+  backdrop-filter:blur(15px);
+}
+
+.online-card b{
+  display:block;
+
+  font-size:15px;
+  letter-spacing:2px;
+}
+
+.online{
+  color:#32e47c;
+
+  font-size:9px;
+  letter-spacing:2px;
+
+  margin-top:4px;
+}
+
+.dot{
+  display:inline-block;
+
+  width:7px;
+  height:7px;
+
+  background:#32e47c;
+
+  border-radius:50%;
+
+  box-shadow:0 0 8px #32e47c;
+
+  margin-right:5px;
+}
+
+/* ================= AI CORE ================= */
+
+.core{
+  width:220px;
+  height:220px;
+
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.core-ring{
+  position:absolute;
+
+  border-radius:50%;
+
+  border:1px solid rgba(255,25,60,.3);
+}
+
+.ring1{
+  width:215px;
+  height:215px;
+
+  border-style:dashed;
+
+  animation:spin 18s linear infinite;
+}
+
+.ring2{
+  width:180px;
+  height:180px;
+
+  border-top:3px solid var(--red);
+  border-bottom:1px solid transparent;
+
+  animation:spinReverse 8s linear infinite;
+
+  box-shadow:0 0 18px rgba(255,0,40,.25);
+}
+
+.ring3{
+  width:145px;
+  height:145px;
+
+  border-left:3px solid #ff687b;
+  border-right:1px solid transparent;
+
+  animation:spin 5s linear infinite;
+}
+
+.core-ball{
+  width:108px;
+  height:108px;
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:39px;
+  font-weight:bold;
+
+  color:white;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #ff697b,
+      #d90027 35%,
+      #340009 70%,
+      #050505
+    );
+
+  border:2px solid #ff344f;
+
+  box-shadow:
+    0 0 25px rgba(255,0,45,.65),
+    0 0 65px rgba(255,0,45,.22),
+    inset 0 0 30px rgba(255,100,120,.35);
+
+  animation:pulse 3s ease-in-out infinite;
+}
+
+.core-ball.listening{
+  animation:listen .55s ease-in-out infinite alternate;
+
+  box-shadow:
+    0 0 35px rgba(255,0,45,.9),
+    0 0 100px rgba(255,0,45,.35);
+}
+
+.core-label{
+  position:absolute;
+
+  bottom:-8px;
+
+  font-size:10px;
+  letter-spacing:5px;
+
+  color:#aaa;
+}
+
+/* ================= CHAT ================= */
+
+.chat{
+  position:absolute;
+
+  left:17px;
+  right:17px;
+
+  top:48%;
+  bottom:150px;
+
+  border:1px solid #19191e;
+
+  border-radius:25px;
+
+  background:rgba(7,7,8,.82);
+
+  backdrop-filter:blur(18px);
+
+  overflow-y:auto;
+
+  padding:22px 15px 15px;
+
+  z-index:4;
+
+  scrollbar-width:none;
+}
+
+.chat::-webkit-scrollbar{
+  display:none;
+}
+
+.today{
+  width:max-content;
+
+  margin:0 auto 16px;
+
+  padding:6px 18px;
+
+  border-radius:10px;
+
+  background:#16161a;
+
+  color:#888;
+
+  font-size:11px;
+}
+
+.message{
+  display:flex;
+
+  gap:9px;
+
+  margin:13px 0;
+
+  align-items:flex-end;
+}
+
+.message.user{
+  justify-content:flex-end;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+
+  flex-shrink:0;
+
+  border-radius:50%;
+
+  border:1px solid var(--red);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  color:white;
+
+  background:#170005;
+
+  box-shadow:0 0 12px rgba(255,0,45,.25);
+
+  font-weight:bold;
+}
+
+.bubble{
+  max-width:76%;
+
+  padding:13px 16px;
+
+  border-radius:17px;
+
+  background:#111216;
+
+  border:1px solid #25262c;
+
+  color:#e8e8e8;
+
+  line-height:1.45;
+
+  font-size:14px;
+}
+
+.user .bubble{
+  background:
+    linear-gradient(
+      135deg,
+      #33060d,
+      #170307
+    );
+
+  border-color:#8e1026;
+}
+
+.name{
+  color:var(--red2);
+
+  font-size:11px;
+
+  font-weight:bold;
+
+  margin-bottom:5px;
+}
+
+.time{
+  color:#68686e;
+
+  font-size:9px;
+
+  margin-left:7px;
+
+  font-weight:normal;
+}
+
+/* ================= INPUT AREA ================= */
+
+.input-area{
+  position:absolute;
+
+  left:17px;
+  right:17px;
+
+  bottom:78px;
+
+  height:62px;
+
+  display:flex;
+
+  gap:8px;
+
+  z-index:8;
+}
+
+/* FUTURISTIC MICROPHONE */
+
+.mic{
+  width:62px;
+  height:62px;
+
+  flex-shrink:0;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #240008 0%,
+      #0a0809 60%,
+      #050505 100%
+    );
+
+  border:1px solid #ff163d;
+
+  color:#ff405b;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  position:relative;
+
+  box-shadow:
+    0 0 12px rgba(255,0,45,.35),
+    inset 0 0 18px rgba(255,0,45,.12);
+
+  cursor:pointer;
+
+  transition:.25s ease;
+}
+
+.mic::before{
+  content:"";
+
+  position:absolute;
+
+  inset:5px;
+
+  border-radius:50%;
+
+  border:1px solid rgba(255,30,60,.35);
+}
+
+.mic::after{
+  content:"";
+
+  position:absolute;
+
+  inset:-4px;
+
+  border-radius:50%;
+
+  border:1px solid transparent;
+
+  border-top-color:rgba(255,30,60,.6);
+
+  border-bottom-color:rgba(255,30,60,.2);
+
+  animation:micRing 4s linear infinite;
+}
+
+.mic svg{
+  width:29px;
+  height:29px;
+
+  fill:none;
+
+  stroke:#ff405b;
+
+  stroke-width:1.7;
+
+  stroke-linecap:round;
+  stroke-linejoin:round;
+
+  filter:
+    drop-shadow(0 0 5px rgba(255,0,45,.8));
+
+  position:relative;
+
+  z-index:2;
+}
+
+.mic:hover{
+  transform:scale(1.04);
+
+  box-shadow:
+    0 0 25px rgba(255,0,45,.55),
+    inset 0 0 22px rgba(255,0,45,.18);
+}
+
+.mic.active{
+  background:
+    radial-gradient(
+      circle,
+      #720015,
+      #230006 55%,
+      #050505
+    );
+
+  box-shadow:
+    0 0 25px rgba(255,0,45,.9),
+    0 0 50px rgba(255,0,45,.35),
+    inset 0 0 25px rgba(255,60,80,.3);
+
+  animation:micPulse .55s ease-in-out infinite alternate;
+}
+
+.mic.active svg{
+  stroke:#ffffff;
+
+  filter:
+    drop-shadow(0 0 5px #ff163d)
+    drop-shadow(0 0 12px #ff163d);
+}
+
+.input-box{
+  flex:1;
+
+  height:62px;
+
+  display:flex;
+  align-items:center;
+
+  border:1px solid #25252b;
+
+  border-radius:31px;
+
+  background:#080809;
+
+  padding-left:22px;
+
+  box-shadow:
+    inset 0 0 15px rgba(255,255,255,.015);
+}
+
+.input-box input{
+  flex:1;
+
+  border:none;
+  outline:none;
+
+  background:none;
+
+  color:white;
+
+  font-size:15px;
+
+  min-width:0;
+}
+
+.input-box input::placeholder{
+  color:#707077;
+}
+
+.send{
+  width:51px;
+  height:51px;
+
+  margin-right:5px;
+
+  border-radius:50%;
+
+  border:none;
+
+  background:var(--red);
+
+  color:white;
+
+  font-size:21px;
+
+  box-shadow:
+    0 0 17px rgba(255,0,45,.4);
+
+  cursor:pointer;
+}
+
+/* ================= NAV ================= */
+
+.nav{
+  position:absolute;
+
+  left:17px;
+  right:17px;
+
+  bottom:10px;
+
+  height:61px;
+
+  border:1px solid #202126;
+
+  border-radius:21px;
+
+  background:rgba(8,8,9,.94);
+
+  display:flex;
+
+  justify-content:space-around;
+  align-items:center;
+
+  z-index:10;
+}
+
+.nav-item{
+  flex:1;
+
+  height:100%;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  gap:4px;
+
+  color:#8d8d95;
+
+  font-size:9px;
+
+  letter-spacing:.5px;
+
+  cursor:pointer;
+}
+
+.nav-icon{
+  font-size:20px;
+}
+
+.nav-item.active{
+  color:var(--red);
+}
+
+.nav-item.active .nav-icon{
+  text-shadow:
+    0 0 10px rgba(255,0,45,.8);
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes spinReverse{
+  to{
+    transform:rotate(-360deg);
+  }
+}
+
+@keyframes pulse{
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.07);
+  }
+}
+
+@keyframes listen{
+  from{
+    transform:scale(.96);
+  }
+
+  to{
+    transform:scale(1.1);
+  }
+}
+
+@keyframes micRing{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes micPulse{
+  from{
+    transform:scale(.97);
+  }
+
+  to{
+    transform:scale(1.06);
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:420px){
+
+  .brand h1{
+    font-size:21px;
+  }
+
+  .brand p{
+    font-size:7px;
+  }
+
+  .header-actions .icon-btn:nth-child(1){
+    display:none;
+  }
+
+  .tagline{
+    left:18px;
+    top:28px;
+    font-size:11px;
+  }
+
+  .online-card{
+    right:15px;
+    top:28px;
+
+    padding:10px 12px;
+  }
+
+  .hero{
+    height:34vh;
+  }
+
+  .core{
+    transform:scale(.86);
+  }
+
+  .chat{
+    top:43%;
+    bottom:145px;
+  }
+
+  .bubble{
+    font-size:13px;
+  }
+
+  .nav-item{
+    font-size:8px;
+  }
+
+  .nav-icon{
+    font-size:18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<header class="header">
+
+  <div class="header-left">
+
+    <button class="menu">☰</button>
+
+    <div class="logo">T</div>
+
+    <div class="brand">
+
+      <h1>TAGA</h1>
+
+      <p>YOUR AI ASSISTANT</p>
+
+    </div>
+
+  </div>
+
+  <div class="header-actions">
+
+    <button class="icon-btn">♢</button>
+
+    <button class="icon-btn">⚙</button>
+
+  </div>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="tagline">
+
+    SMARTER<br>
+
+    FASTER<br>
+
+    <strong>TOGETHER</strong>
+
+  </div>
+
+
+  <div class="online-card">
+
+    <b>TAGA</b>
+
+    <div class="online">
+
+      <span class="dot"></span>
+
+      ONLINE
+
+    </div>
+
+  </div>
+
+
+  <div class="core">
+
+    <div class="core-ring ring1"></div>
+
+    <div class="core-ring ring2"></div>
+
+    <div class="core-ring ring3"></div>
+
+    <div class="core-ball" id="core">
+      T
+    </div>
+
+    <div class="core-label" id="state">
+      READY
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CHAT -->
+
+<div class="chat" id="chat">
+
+  <div class="today">
+    Today
+  </div>
+
+
+  <div class="message">
+
+    <div class="avatar">
+      T
+    </div>
+
+
+    <div class="bubble">
+
+      <div class="name">
+
+        TAGA
+
+        <span class="time">
+          11:19 AM
+        </span>
+
+      </div>
+
+      Walaikum Assalam! Main TAGA hoon.
+      Bato kya karna hai? 😊
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- INPUT -->
+
+<div class="input-area">
+
+
+  <!-- NEW NEON MICROPHONE -->
+
+  <button class="mic" id="mic">
+
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+
+      <path
+        d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 0 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5Z"
+      />
+
+      <path
+        d="M19 11.5a7 7 0 0 1-14 0"
+      />
+
+      <path
+        d="M12 18.5V22"
+      />
+
+      <path
+        d="M8.5 22h7"
+      />
+
+    </svg>
+
+  </button>
+
+
+  <div class="input-box">
+
+    <input
+      id="message"
+      type="text"
+      placeholder="Message TAGA..."
+      autocomplete="off"
+    >
+
+
+    <button
+      class="send"
+      id="send"
+    >
+      ➤
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- NAVIGATION -->
+
+<nav class="nav">
+
+
+  <div class="nav-item active">
+
+    <div class="nav-icon">
+      💬
+    </div>
+
+    Chat
+
+  </div>
+
+
+  <div class="nav-item">
+
+    <div class="nav-icon">
+      🎙
+    </div>
+
+    Voice
+
+  </div>
+
+
+  <div class="nav-item">
+
+    <div class="nav-icon">
+      🧠
+    </div>
+
+    Skills
+
+  </div>
+
+
+  <div class="nav-item">
+
+    <div class="nav-icon">
+      ⚡
+    </div>
+
+    Tools
+
+  </div>
+
+
+  <div class="nav-item">
+
+    <div class="nav-icon">
+      ☷
+    </div>
+
+    Settings
+
+  </div>
+
+
+</nav>
+
+</div>
+
+
+<script>
+
+/* ================= ELEMENTS ================= */
+
+const input =
+  document.getElementById("message");
+
+const send =
+  document.getElementById("send");
+
+const mic =
+  document.getElementById("mic");
+
+const chat =
+  document.getElementById("chat");
+
+const state =
+  document.getElementById("state");
+
+const core =
+  document.getElementById("core");
+
+
+/* ================= MESSAGE ================= */
+
+function addMessage(text,type){
+
+  const message =
+    document.createElement("div");
+
+  message.className =
+    "message " + type;
+
+
+  if(type === "ai"){
+
+    message.innerHTML = `
+
+      <div class="avatar">
+        T
+      </div>
+
+      <div class="bubble">
+
+        <div class="name">
+
+          TAGA
+
+          <span class="time">
+            ${getTime()}
+          </span>
+
+        </div>
+
+        ${escapeHTML(text)}
+
+      </div>
+
+    `;
+
+  }else{
+
+    message.innerHTML = `
+
+      <div class="bubble">
+
+        ${escapeHTML(text)}
+
+      </div>
+
+      <div class="avatar">
+        ●
+      </div>
+
+    `;
+
+  }
+
+
+  chat.appendChild(message);
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+
+/* ================= TIME ================= */
+
+function getTime(){
+
+  return new Date().toLocaleTimeString(
+    [],
+    {
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* ================= SECURITY ================= */
+
+function escapeHTML(text){
+
+  const div =
+    document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+
+}
+
+
+/* ================= STATE ================= */
+
+function setState(text){
+
+  state.textContent = text;
+
+}
+
+
+/* ================= VOICE OUTPUT ================= */
+
+function speak(text){
+
+  if(!("speechSynthesis" in window)){
+    return;
+  }
+
+
+  speechSynthesis.cancel();
+
+
+  const voice =
+    new SpeechSynthesisUtterance(text);
+
+
+  voice.rate = .93;
+
+  voice.pitch = .82;
+
+  voice.volume = 1;
+
+
+  voice.onstart = function(){
+
+    setState("SPEAKING");
+
+  };
+
+
+  voice.onend = function(){
+
+    setState("READY");
+
+  };
+
+
+  speechSynthesis.speak(voice);
+
+}
+
+
+/* ================= LOCAL AI ================= */
+
+function localAI(text){
+
+  const m =
+    text.toLowerCase();
+
+
+  if(
+    m.includes("salam") ||
+    m.includes("assalam") ||
+    m.includes("hello") ||
+    m.includes("hi")
+  ){
+
+    return "Walaikum Assalam! Main TAGA hoon. Batao kya karna hai?";
+
+  }
+
+
+  if(
+    m.includes("tum kon") ||
+    m.includes("who are you")
+  ){
+
+    return "Main TAGA hoon — tumhara personal AI assistant. Abhi mera interface ready hai aur hum meri real AI capabilities step by step connect kar rahe hain.";
+
+  }
+
+
+  if(m.includes("youtube")){
+
+    return "YouTube tools ka module baad mein connect karenge. Phir tum mujhe content planning aur channel workflows ke liye use kar sakoge.";
+
+  }
+
+
+  if(m.includes("voice")){
+
+    return "Voice system active hai. Mic button dabao aur mujhse baat karo.";
+
+  }
+
+
+  return "Command receive ho gayi. Mera AI brain abhi OpenRouter connection se connect nahi hua. Ye next stage mein connect hoga.";
+
+}
+
+
+/* ================= SEND MESSAGE ================= */
+
+async function sendMessage(){
+
+  const text =
+    input.value.trim();
+
+
+  if(!text){
+    return;
+  }
+
+
+  addMessage(
+    text,
+    "user"
+  );
+
+
+  input.value = "";
+
+
+  setState("THINKING");
+
+
+  await new Promise(
+    resolve =>
+      setTimeout(resolve,700)
+  );
+
+
+  const answer =
+    localAI(text);
+
+
+  addMessage(
+    answer,
+    "ai"
+  );
+
+
+  setState("READY");
+
+
+  speak(answer);
+
+}
+
+
+/* ================= SEND BUTTON ================= */
+
+send.addEventListener(
+  "click",
+  sendMessage
+);
+
+
+/* ================= ENTER KEY ================= */
+
+input.addEventListener(
+  "keydown",
+  function(e){
+
+    if(e.key === "Enter"){
+
+      sendMessage();
+
+    }
+
+  }
+);
+
+
+/* ================= VOICE INPUT ================= */
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+
+if(SpeechRecognition){
+
+  const recognition =
+    new SpeechRecognition();
+
+
+  recognition.lang =
+    "en-US";
+
+
+  recognition.continuous =
+    false;
+
+
+  recognition.interimResults =
+    false;
+
+
+  mic.addEventListener(
+    "click",
+    function(){
+
+      try{
+
+        recognition.start();
+
+
+        mic.classList.add(
+          "active"
+        );
+
+
+        core.classList.add(
+          "listening"
+        );
+
+
+        setState(
+          "LISTENING"
+        );
+
+      }catch(e){}
+
+    }
+  );
+
+
+  recognition.onresult =
+    function(event){
+
+      const text =
+        event.results[0][0]
+          .transcript;
+
+
+      input.value =
+        text;
+
+
+      mic.classList.remove(
+        "active"
+      );
+
+
+      core.classList.remove(
+        "listening"
+      );
+
+
+      sendMessage();
+
+    };
+
+
+  recognition.onend =
+    function(){
+
+      mic.classList.remove(
+        "active"
+      );
+
+
+      core.classList.remove(
+        "listening"
+      );
+
+
+      if(
+        state.textContent ===
+        "LISTENING"
+      ){
+
+        setState(
+          "READY"
+        );
+
+      }
+
+    };
+
+}else{
+
+  mic.addEventListener(
+    "click",
+    function(){
+
+      alert(
+        "Voice input is not supported by this browser. Chrome try karo."
+      );
+
+    }
+  );
+
+}
+
+
+/* ================= NAVIGATION ================= */
+
+document
+  .querySelectorAll(".nav-item")
+  .forEach(item => {
+
+    item.addEventListener(
+      "click",
+      function(){
+
+        document
+          .querySelectorAll(".nav-item")
+          .forEach(x =>
+            x.classList.remove(
+              "active"
+            )
+          );
+
+
+        this.classList.add(
+          "active"
+        );
+
+      }
+    );
+
+  });
+
+</script>
+
+</body>
+  </html>
